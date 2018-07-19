@@ -10,19 +10,21 @@
 class Matrix
 {
 public:
-    Matrix(int pind[4], int pins[8]);
+    Matrix(int matrix_pinDigits[4], int matrix_pinSegments[8]);
     ~Matrix();
 
-    void showMatrix(int number, int dot);
+    void showMatrix(int number, int dot_point);
+    void showIntNumber(int number);
 protected:
 
 private:
     void showNumber(int num,int dig);
+    void m_showNumber(int number);
 
     int pinDigits[4];
-    int pinPins[8];
+    int pinSegments[8];
 
-    byte numbers[10];
+    byte m_numbers[10];
 
     int number;
     int number1;
