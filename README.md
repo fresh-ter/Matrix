@@ -5,7 +5,7 @@ Matrix - библиотека для Arduino
 Как скачать
 -----------------------------------
 > 
-> ### [Скачать свежую версию Matrix](https://github.com/fresh-ter/Matrix/files/2213540/Matrix.zip)
+> ### [Скачать свежую версию Matrix](https://github.com/fresh-ter/Matrix/archive/master.zip)
 >
 
 Как установить
