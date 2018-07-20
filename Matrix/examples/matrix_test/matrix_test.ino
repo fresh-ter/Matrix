@@ -6,7 +6,7 @@
  * 
  * Более подробную информацию вы найдете
  *                здесь
- * (https://github.com/fresh-ter/Matrix)
+ * (https://github.com/fresh-ter/Matrix/wiki)
  * 
  * Подключение библиотеки осуществляется следующим образом:
  * 

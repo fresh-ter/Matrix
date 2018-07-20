@@ -13,4 +13,5 @@ Matrix	KEYWORD1
 #######################################
 
 showMatrix	KEYWORD2
-showIntNuber	KEYWORD2
+showIntNumber	KEYWORD2
+showError	KEYWORD2
