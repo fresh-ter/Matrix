@@ -23,3 +23,5 @@ Matrix - библиотека для Arduino
 Если установка библиотеки прошла успешно, то в меню `Файл` -> `Примеры` появится пункт `Matrix`.
 
 Там будет пункт `matrix_test`. (`Matrix` -> `matrix_test`)
+
+Полное руководство вы найдете в [Matrix wiki](https://github.com/fresh-ter/Matrix/wiki)
