@@ -24,4 +24,4 @@ Matrix - библиотека для Arduino
 
 Там будет пункт `matrix_test`. (`Matrix` -> `matrix_test`)
 
-Полное руководство вы найдете в [Matrix wiki](https://github.com/fresh-ter/Matrix/wiki)
+***Полное руководство вы найдете в [Matrix wiki](https://github.com/fresh-ter/Matrix/wiki).***
