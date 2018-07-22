@@ -1,3 +1,7 @@
+v1.0.1
+	Добавлено:
+		* Метод showIntNumber(int number)
+
 v1.0.0
 	Добавлено:
 		* Метод showMatrix(int number, int dot)
