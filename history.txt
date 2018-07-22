@@ -1,1 +1,3 @@
-
+v1.0.0
+	Добавлено:
+		* Метод showMatrix(int number, int dot)
