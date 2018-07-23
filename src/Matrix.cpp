@@ -39,10 +39,10 @@ Matrix::Matrix(int matrix_pinDigits[4], int matrix_pinSegments[8]) {
 	m_chars[26] = B00000000; // (Space)
 	m_chars[27] = B00000010; // -
 
-	m_error[3] = 'e';
-	m_error[2] = 'r';
-	m_error[1] = 'r';
-	m_error[0] = ' ';
+	m_error[3] = B10011110; // E
+	m_error[2] = B00001010; // r
+	m_error[1] = B00001010; // r
+	m_error[0] = B00000000; // (Space)
 
 	millis_int = 0;
 
@@ -161,17 +161,23 @@ void Matrix::showError() {
 }
 
 void Matrix::m_showError() {
-	for(int i=3; i>0; i--) {
-		
-		m_showChar(m_error[i]);
+	for(int i1=3; i1>0; i1--) {
+		for(int i=0; i<8; i++) {
+			if(bitRead(m_error[i1], 7-i) == HIGH)
+				digitalWrite(pinSegments[i], HIGH);
+			else
+				digitalWrite(pinSegments[i], LOW);
+		}
 
 		for(int j=0; j<4; j++)
 			digitalWrite(pinDigits[j],HIGH);
-		digitalWrite(pinDigits[i],LOW);
+		digitalWrite(pinDigits[i1],LOW);
 
 		delay(1);
 		}
 	m_reset();
+
+	
 }
 
 void Matrix::m_showNumber(int number) {

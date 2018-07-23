@@ -27,7 +27,7 @@ private:
     void m_showChar(char c);
     void m_reset();
 
-    char m_error[4];
+    byte m_error[4];
 
     unsigned long millis_int;
 
