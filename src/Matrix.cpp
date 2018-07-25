@@ -5,6 +5,19 @@
 #include "Matrix.h"
 
 Matrix::Matrix(int matrix_pinDigits[4], int matrix_pinSegments[8]) {
+	pinSegments[0] = matrix_pinSegments[0];
+	pinSegments[1] = matrix_pinSegments[1];
+	pinSegments[2] = matrix_pinSegments[2];
+	pinSegments[3] = matrix_pinSegments[3];
+	pinSegments[4] = matrix_pinSegments[4];
+	pinSegments[5] = matrix_pinSegments[5];
+	pinSegments[6] = matrix_pinSegments[6];
+	pinSegments[7] = matrix_pinSegments[7];
+	pinDigits[0] = matrix_pinDigits[3];
+	pinDigits[1] = matrix_pinDigits[2];
+	pinDigits[2] = matrix_pinDigits[1];
+	pinDigits[3] = matrix_pinDigits[0];
+
 	//numbers = { B11111100, B01100000, B11011010,
 				   //   B11110010, B01100110, B10110110,
 				   //   B10111110, B11100000, B11111110,
@@ -20,19 +33,6 @@ Matrix::Matrix(int matrix_pinDigits[4], int matrix_pinSegments[8]) {
 	m_numbers[7] = B11100000; // 7
 	m_numbers[8] = B11111110; // 8
 	m_numbers[9] = B11110110; // 9
-
-	pinSegments[0] = matrix_pinSegments[0];
-	pinSegments[1] = matrix_pinSegments[1];
-	pinSegments[2] = matrix_pinSegments[2];
-	pinSegments[3] = matrix_pinSegments[3];
-	pinSegments[4] = matrix_pinSegments[4];
-	pinSegments[5] = matrix_pinSegments[5];
-	pinSegments[6] = matrix_pinSegments[6];
-	pinSegments[7] = matrix_pinSegments[7];
-	pinDigits[0] = matrix_pinDigits[3];
-	pinDigits[1] = matrix_pinDigits[2];
-	pinDigits[2] = matrix_pinDigits[1];
-	pinDigits[3] = matrix_pinDigits[0];
 
 	m_chars[4] = B10011110; // E
 	m_chars[17] = B00001010; // r
@@ -144,6 +144,10 @@ void Matrix::showIntNumber(int number) {
 	}
 }
 
+void Matrix::showError() {
+	m_showError();
+}
+
 void Matrix::showNumber(int num, int dig) {
 	for(int i=0; i<8; i++)
 	{
@@ -154,10 +158,6 @@ void Matrix::showNumber(int num, int dig) {
 	}
 	if(dig==1)
 		digitalWrite(pinSegments[7], HIGH);
-}
-
-void Matrix::showError() {
-	m_showError();
 }
 
 void Matrix::m_showError() {
