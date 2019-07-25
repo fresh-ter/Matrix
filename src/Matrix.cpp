@@ -4,7 +4,26 @@
 */
 #include "Matrix.h"
 
-Matrix::Matrix(int matrix_pinDigits[4], int matrix_pinSegments[8]) {
+Matrix::Matrix(char share_contact) {
+	if(share_contact == 'C') {
+		sign = false;
+		negative_sign = true;
+	}
+	else if(share_contact == 'A') {
+		sign = true;
+		negative_sign = false;
+	}
+
+	m_arrayInitialization();
+
+	millis_int = 0;
+}
+
+Matrix::~Matrix() {
+	//dtor
+}
+
+void Matrix::setSegmentPins(int matrix_pinSegments[8]) {
 	pinSegments[0] = matrix_pinSegments[0];
 	pinSegments[1] = matrix_pinSegments[1];
 	pinSegments[2] = matrix_pinSegments[2];
@@ -13,26 +32,35 @@ Matrix::Matrix(int matrix_pinDigits[4], int matrix_pinSegments[8]) {
 	pinSegments[5] = matrix_pinSegments[5];
 	pinSegments[6] = matrix_pinSegments[6];
 	pinSegments[7] = matrix_pinSegments[7];
-	pinDigits[0] = matrix_pinDigits[3];
-	pinDigits[1] = matrix_pinDigits[2];
-	pinDigits[2] = matrix_pinDigits[1];
-	pinDigits[3] = matrix_pinDigits[0];
 
-	//numbers = { B11111100, B01100000, B11011010,
-				   //   B11110010, B01100110, B10110110,
-				   //   B10111110, B11100000, B11111110,
-				   //   B11110110
-				   // };
-	m_numbers[0] = B11111100; // 0
-	m_numbers[1] = B01100000; // 1
-	m_numbers[2] = B11011010; // 2
-	m_numbers[3] = B11110010; // 3
-	m_numbers[4] = B01100110; // 4
-	m_numbers[5] = B10110110; // 5
-	m_numbers[6] = B10111110; // 6
-	m_numbers[7] = B11100000; // 7
-	m_numbers[8] = B11111110; // 8
-	m_numbers[9] = B11110110; // 9
+	//dig = true;
+}
+
+void Matrix::setDigitPins(int *matrix_pinDigits, int matrix_sizeDigits) {
+	sizeDigits = matrix_sizeDigits;
+
+	int b[sizeDigits];
+
+	for(int c=0,c1=sizeDigits-1; c<sizeDigits; c++,c1--)
+    {
+        b[c] = *(matrix_pinDigits+c1);
+    }
+    pinDigits = &b[0];
+
+	m_reset();
+}
+
+void Matrix::m_arrayInitialization() {
+	m_digits[0] = B11111100; // 0
+	m_digits[1] = B01100000; // 1
+	m_digits[2] = B11011010; // 2
+	m_digits[3] = B11110010; // 3
+	m_digits[4] = B01100110; // 4
+	m_digits[5] = B10110110; // 5
+	m_digits[6] = B10111110; // 6
+	m_digits[7] = B11100000; // 7
+	m_digits[8] = B11111110; // 8
+	m_digits[9] = B11110110; // 9
 
 	m_chars[4] = B10011110; // E
 	m_chars[17] = B00001010; // r
@@ -43,77 +71,57 @@ Matrix::Matrix(int matrix_pinDigits[4], int matrix_pinSegments[8]) {
 	m_error[2] = B00001010; // r
 	m_error[1] = B00001010; // r
 	m_error[0] = B00000000; // (Space)
-
-	millis_int = 0;
-
-	m_reset();
-}
-
-Matrix::~Matrix() {
-	//dtor
 }
 
 void Matrix::m_reset() {
 	for(int i=0; i<8; i++)
 		pinMode(pinSegments[i],OUTPUT);
-	for(int i=0; i<4; i++) {
-		pinMode(pinDigits[i],OUTPUT);
-		digitalWrite(pinDigits[i],HIGH);
+	for(int i=0; i<sizeDigits; i++) {
+		pinMode(*(pinDigits+i),OUTPUT);
+		digitalWrite(*(pinDigits+i),negative_sign);
 	}
 }
 
-void Matrix::showMatrix(int number, int dot_point) {
-	number1=number;
+int Matrix::m_pow(int i, int n) { 
+	int i_r=i;
+	for(int c=1; c<n; c++)
+		i_r=i_r*i;
 
-	for(int i=0; i<4; i++)
-	{
-		number2=number1%10;
-		number1=number1/10;
-
-		if(5-dot_point == i+1)
-			showNumber(number2,1);
-		else
-			showNumber(number2,0);
-
-		for(int j=0; j<4; j++)
-			digitalWrite(pinDigits[j],HIGH);
-		digitalWrite(pinDigits[i],LOW);
-
-		delay(1);
-	}
+	return i_r;
 }
 
 void Matrix::showIntNumber(int number) {
-	if(number < 10000 && number >= 0) {
+	if(number < m_pow(10, sizeDigits) && number >= 0) {
 		number1=number;
 
-		for(int i=0; i<4; i++) {
+		for(int i=0; i<sizeDigits; i++) {
 			number2=number1%10;
 			number1=number1/10;
 
-			m_showNumber(number2);
+			m_showDigit(number2);
 
-			for(int j=0; j<4; j++)
-				digitalWrite(pinDigits[j],HIGH);
-			digitalWrite(pinDigits[i],LOW);
+			for(int j=0; j<sizeDigits; j++)
+				digitalWrite(*(pinDigits+j),negative_sign);
+			digitalWrite(*(pinDigits+i),sign);
 
 			delay(1);
 			m_reset();
 		}
 	}
-	else if(number < 0 && number > (-1000)) {
+	else if(number < 0 && number > (-(m_pow(10, sizeDigits-1))) 
+			&& sizeDigits > 1) {
 		number = number * (-1);
 		number1=number;
 
-		for(int i=0; i<3; i++) {
+		for(int i=0; i<(sizeDigits-1); i++) {
 			number2=number1%10;
 			number1=number1/10;
 
-			m_showNumber(number2);
+			m_showDigit(number2);
 
-			for(int j=0; j<4; j++)
-				digitalWrite(pinDigits[j],HIGH);
-			digitalWrite(pinDigits[i],LOW);
+			for(int j=0; j<sizeDigits; j++)
+				digitalWrite(*(pinDigits+j),negative_sign);
+			digitalWrite(*(pinDigits+i),sign);
 
 			delay(1);
 
@@ -122,21 +130,21 @@ void Matrix::showIntNumber(int number) {
 
 		m_showChar('-');
 
-		for(int j=0; j<4; j++)
-			digitalWrite(pinDigits[j],HIGH);
-		digitalWrite(pinDigits[3],LOW);
+		for(int j=0; j<sizeDigits; j++)
+			digitalWrite(*(pinDigits+j),negative_sign);
+		digitalWrite(*(pinDigits+(sizeDigits-1)),sign);
 
 		delay(1);
 
 		m_reset();
 	}
 	else {
-		if(millis()-millis_int <= 500) {
+		if(millis()-millis_int <= 300) {
 		m_showError();
 		m_reset();
 		}
 
-		if(millis()-millis_int >= 1000) {
+		if(millis()-millis_int >= 300*2) {
 			m_reset();
 
 			millis_int = millis();
@@ -145,50 +153,77 @@ void Matrix::showIntNumber(int number) {
 }
 
 void Matrix::showError() {
-	m_showError();
+	if(millis()-millis_int <= 1000) {
+		m_showError();
+		m_reset();
+		}
+
+		if(millis()-millis_int >= 1000*2) {
+			m_reset();
+
+			millis_int = millis();
+		}
 }
 
-void Matrix::showNumber(int num, int dig) {
-	for(int i=0; i<8; i++)
-	{
-		if(bitRead(m_numbers[num], 7-i) == HIGH)
-			digitalWrite(pinSegments[i], HIGH);
-		else
-			digitalWrite(pinSegments[i], LOW);
-	}
-	if(dig==1)
-		digitalWrite(pinSegments[7], HIGH);
-}
+// void Matrix::showNumber(int num, int dig) {
+// 	for(int i=0; i<8; i++)
+// 	{
+// 		if(bitRead(m_numbers[num], 7-i) == HIGH)
+// 			digitalWrite(pinSegments[i], HIGH);
+// 		else
+// 			digitalWrite(pinSegments[i], LOW);
+// 	}
+// 	if(dig==1)
+// 		digitalWrite(pinSegments[7], HIGH);
+// }
 
 void Matrix::m_showError() {
-	for(int i1=3; i1>0; i1--) {
+	if(sizeDigits >= 3)
+	{
+		for(int i1=3; i1>0; i1--) {
+			for(int i=0; i<8; i++) {
+				if(bitRead(m_error[i1], 7-i) == HIGH)
+					digitalWrite(pinSegments[i], HIGH);
+				else
+					digitalWrite(pinSegments[i], LOW);
+			}
+
+			for(int j=0; j<sizeDigits; j++)
+				digitalWrite(*(pinDigits+j),negative_sign);
+			digitalWrite(*(pinDigits+(i1-1)),sign);
+
+			delay(1);
+			}
+		m_reset();
+	}
+	else
+	{
 		for(int i=0; i<8; i++) {
-			if(bitRead(m_error[i1], 7-i) == HIGH)
+			if(bitRead(m_error[3], 7-i) == HIGH)
 				digitalWrite(pinSegments[i], HIGH);
 			else
 				digitalWrite(pinSegments[i], LOW);
 		}
 
-		for(int j=0; j<4; j++)
-			digitalWrite(pinDigits[j],HIGH);
-		digitalWrite(pinDigits[i1],LOW);
+		for(int j=0; j<sizeDigits; j++)
+			digitalWrite(*(pinDigits+j),negative_sign);
+		digitalWrite(*(pinDigits+(sizeDigits-1)),sign);
 
 		delay(1);
-		}
-	m_reset();
-
-	
+		m_reset();
+	}
 }
 
-void Matrix::m_showNumber(int number) {
+void Matrix::m_showDigit(int digit) {
 	for(int i=0; i<8; i++)
 	{
-		if(bitRead(m_numbers[number], 7-i) == HIGH)
+		if(bitRead(m_digits[digit], 7-i) == HIGH)
 			digitalWrite(pinSegments[i], HIGH);
 		else
 			digitalWrite(pinSegments[i], LOW);
 	}
 }
+
 
 void Matrix::m_showChar(char c) {
 	int number = 26;

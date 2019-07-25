@@ -6,12 +6,12 @@
 # Datatypes (KEYWORD1)
 #######################################
 
-Matrix	KEYWORD1
+Matrix  KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
 
-showMatrix	KEYWORD2
+setPins	KEYWORD2
 showIntNumber	KEYWORD2
 showError	KEYWORD2

@@ -1,16 +1,32 @@
-v1.1.0
-	Добавлено:
+v2.0.0
+	Added:
+		* Метод setSegmentPins(int matrix_pinSegments[8])
+		* Метод setDigitPins(int *matrix_pinDigits, int matrix_sizeDigits)
+		* Возможность использовать 7-сегментгый индикатор как с
+			общим катодом, так и с общим анодом
+		* Возможность использовать 7-сегментгый индикатор любой разрядности
+	Updated:
+		* Конструктор класса <Matrix>
+			/ Был: Matrix(int matrix_pinDigits[4], int matrix_pinSegments[8])
+			/ Стал: Matrix(char share_contact)
 		* Метод showError(void)
-	Исправлено:
+			/ Теперь надпись "Err" мигает
+	Deleted:
+		* Метод showMatrix(int number, int dot_point)
+
+v1.1.0
+	Added:
+		* Метод showError(void)
+	Corrected:
 		* Метод showIntNumber(int number)
 			/ Теперь можно выводить отрицательные числа
 			/ Выводится надпись "Err", если наблюдается попытка вывести число, которое не помещается на матрицу
 			/ Баг с динамической индикацией
 
 v1.0.1
-	Добавлено:
+	Added:
 		* Метод showIntNumber(int number)
 
 v1.0.0
-	Добавлено:
+	Added:
 		* Метод showMatrix(int number, int dot)

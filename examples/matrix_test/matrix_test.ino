@@ -84,11 +84,13 @@ int matrix_pinDigits[4] = {8,11,12,2};
 // { A, B, C, D, E, F, G, DP }
 int matrix_pinSegments[8] = {9,13,4,6,7,10,3,5};
 
-Matrix m(matrix_pinDigits, matrix_pinSegments);
+// Общий катод
+Matrix m('C');
 
 void setup()
 {
-
+	m.setSegmentPins(matrix_pinSegments);
+	m.setDigitPins(&matrix_pinDigits[0], 4);
 }
 void loop()
 {
